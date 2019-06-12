@@ -7,7 +7,7 @@ import java.util.ArrayList;
 class Game {
 	private ArrayList<Actor> playerCharacters;
 	private ArrayList<Actor> monsters;
-	ArrayList<Actor> initiativeOrder;
+	private ArrayList<Actor> initiativeOrder;
 
 	Game(ArrayList<Actor> playerCharacters, ArrayList<Actor> monsters)
 	{
@@ -58,7 +58,7 @@ class Game {
 		}
 	}
 
-	boolean playerCharacterAlive()
+	private boolean playerCharacterAlive()
 	{
 		for (Actor playerCharacter: playerCharacters)
 		{
@@ -67,5 +67,14 @@ class Game {
 		}
 
 		return false;
+	}
+
+	void combat()
+	{
+		while (playerCharacterAlive() && initiativeOrder.size() > 1)
+		{
+			int i = 0;
+//			initiativeOrder.get(i).getAction();
+		}
 	}
 }

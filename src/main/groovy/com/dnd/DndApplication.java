@@ -48,11 +48,7 @@ public class DndApplication
 
 		//combat
 		game.rollForInitiative();
-		while (game.playerCharacterAlive() && game.initiativeOrder.size() > 1)
-		{
-			int i = 0;
-		}
-
+		game.combat();
 
 	}
 }
