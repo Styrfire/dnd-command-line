@@ -1,0 +1,10 @@
+package com.dnd.enums
+
+enum Ability {
+	STRENGTH,
+	DEXTERITY,
+	CONSTITUTION,
+	INTELLIGENCE,
+	WISDOME,
+	CHARISMA
+}

@@ -1,0 +1,22 @@
+apply plugin: "groovy"
+
+group 'dnd-command-line'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile "org.codehaus.groovy:groovy-all:2.4.1" //tied to Spock version in modules.
+
+    testCompile "junit:junit:4.12"
+}
+
+wrapper {
+	description = "Generates gradlew[.bat] scripts"
+	gradleVersion = "5.4.1"
+	distributionType = Wrapper.DistributionType.ALL
+}
