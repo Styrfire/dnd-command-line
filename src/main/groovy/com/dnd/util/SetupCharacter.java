@@ -2,12 +2,13 @@ package com.dnd.util;
 
 import com.dnd.dto.playerCharacter.PlayerCharacter;
 import com.dnd.dto.playerCharacter.Fighter;
+import com.dnd.dto.weapon.Greatsword;
 import com.dnd.dto.weapon.Longsword;
 import com.dnd.enums.Race;
 
 public class SetupCharacter
 {
-	public static PlayerCharacter setupClass(String playerClass)
+	public static PlayerCharacter setupCharacterByClass(String playerClass)
 	{
 		PlayerCharacter playerCharacter = new PlayerCharacter();
 

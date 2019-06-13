@@ -3,13 +3,13 @@ package com.dnd.dto.weapon
 import com.dnd.enums.WeaponCatagory
 import com.dnd.enums.WeaponType
 
-class Longsword extends Weapon {
-	Longsword()
+class Greatsword extends Weapon {
+	Greatsword()
 	{
-		name = "longsword"
+		name = "greatsword"
 		type = WeaponType.MELEE
 		catagory = WeaponCatagory.Martial
-		cost = 1500
-		damage = [8]
+		cost = 5000
+		damage = [6,6]
 	}
 }

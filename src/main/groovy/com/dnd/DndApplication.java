@@ -4,7 +4,6 @@ import com.dnd.dto.Actor;
 import com.dnd.dto.playerCharacter.PlayerCharacter;
 import com.dnd.dto.monster.Goblin;
 import com.dnd.dto.monster.Monster;
-import com.dnd.util.Input;
 import com.dnd.util.SetupCharacter;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class DndApplication
 							"Type in one of the above choices and press enter."
 			);
 
-			playerCharacter = SetupCharacter.setupClass("fighter");//Input.readInput());
+			playerCharacter = SetupCharacter.setupCharacterByClass("fighter");//Input.readInput());
 			if (playerCharacter == null)
 				System.out.println("Option unavailable... Please try again.");
 			else
