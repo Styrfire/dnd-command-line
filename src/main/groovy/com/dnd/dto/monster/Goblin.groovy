@@ -1,6 +1,6 @@
 package com.dnd.dto.monster
 
-import com.dnd.dto.PlayerCharacter
+import com.dnd.dto.playerCharacter.PlayerCharacter
 import com.dnd.dto.weapon.Scimitar
 import com.dnd.dto.weapon.Weapon
 import com.dnd.util.Dice

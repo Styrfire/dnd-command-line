@@ -1,6 +1,8 @@
 package com.dnd;
 
 import com.dnd.dto.Actor;
+import com.dnd.dto.monster.Monster;
+import com.dnd.dto.playerCharacter.PlayerCharacter;
 
 import java.util.ArrayList;
 
@@ -13,6 +15,7 @@ class Game {
 	{
 		this.playerCharacters = playerCharacters;
 		this.monsters = monsters;
+		initiativeOrder = new ArrayList<>();
 	}
 
 	void rollForInitiative()
@@ -74,7 +77,72 @@ class Game {
 		while (playerCharacterAlive() && initiativeOrder.size() > 1)
 		{
 			int i = 0;
-//			initiativeOrder.get(i).getAction();
+			switch (initiativeOrder.get(i).getAction())
+			{
+				case ATTACK:
+					if (initiativeOrder.get(i) instanceof Monster)
+					{
+						for (int i1 = 0; i1 < initiativeOrder.size(); i1++)
+						{
+							Actor defender = initiativeOrder.get(i1);
+							if (defender instanceof PlayerCharacter)
+							{
+								if (initiativeOrder.get(i).attack(defender))
+								{
+									initiativeOrder.get(i).damage(defender);
+									if (defender.getCurrHp() <= 0)
+									{
+										initiativeOrder.remove(i1);
+										if (i > i1)
+											i--;
+
+									}
+								}
+								break;
+							}
+						}
+					}
+					else
+					{
+						for (int i1 = 0; i1 < initiativeOrder.size(); i1++)
+						{
+							Actor defender = initiativeOrder.get(i1);
+							if (defender instanceof Monster)
+							{
+								if (initiativeOrder.get(i).attack(defender))
+								{
+									defender.setCurrHp(defender.getCurrHp() - 5);
+									initiativeOrder.get(i).damage(defender);
+									if (defender.getCurrHp() <= 0)
+									{
+										initiativeOrder.remove(i1);
+										if (i > i1)
+											i--;
+
+									}
+								}
+								break;
+							}
+						}
+					}
+					break;
+				case MOVE:
+				default:
+					break;
+			}
+
+			//end of round statistics!
+			System.out.println("END OF ROUND STATISTICS\n" +
+					"============================================");
+
+			for (int j = 0; j < initiativeOrder.size(); j++)
+			{
+				System.out.println(initiativeOrder.get(j).getName() + " has " + initiativeOrder.get(j).getCurrHp() + " hit points!");
+			}
+
+			i++;
+			if (i + 1 >= initiativeOrder.size())
+				i = 0;
 		}
 	}
 }

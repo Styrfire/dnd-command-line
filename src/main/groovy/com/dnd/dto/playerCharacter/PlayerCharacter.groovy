@@ -1,11 +1,15 @@
-package com.dnd.dto.monster
+package com.dnd.dto.playerCharacter
 
 import com.dnd.dto.Actor
 import com.dnd.enums.Action
+import com.dnd.enums.Race
 import com.dnd.util.AbilityHelper
 import com.dnd.util.Dice
 
-class Monster extends Actor {
+class PlayerCharacter extends Actor {
+	PlayerClass playerClass
+	Race race
+	int level
 	int strength
 	int dexterity
 	int constitution
@@ -29,7 +33,7 @@ class Monster extends Actor {
 	boolean attack(Actor defender)
 	{
 		int attackRole = Dice.rollDice(20) + AbilityHelper.abilityMod(strength)
-		System.out.println(name + "rolled a " + attackRole + "to attack " + defender.getName() + "!")
+		System.out.println(name + "rolled a " + attackRole + " to attack " + defender.getName() + "!")
 
 		if (attackRole >= defender.getAc())
 		{

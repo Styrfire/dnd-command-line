@@ -1,7 +1,7 @@
 package com.dnd.util;
 
-import com.dnd.dto.PlayerCharacter;
-import com.dnd.dto.playerClass.Fighter;
+import com.dnd.dto.playerCharacter.PlayerCharacter;
+import com.dnd.dto.playerCharacter.Fighter;
 import com.dnd.enums.Race;
 
 public class SetupCharacter

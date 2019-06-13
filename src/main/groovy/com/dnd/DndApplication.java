@@ -1,7 +1,7 @@
 package com.dnd;
 
 import com.dnd.dto.Actor;
-import com.dnd.dto.PlayerCharacter;
+import com.dnd.dto.playerCharacter.PlayerCharacter;
 import com.dnd.dto.monster.Goblin;
 import com.dnd.dto.monster.Monster;
 import com.dnd.util.Input;
