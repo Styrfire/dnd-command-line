@@ -26,6 +26,7 @@ class Goblin extends Monster {
 		currHp = 7
 		maxHp = 7
 		ac = 15
+		moveSpeed = 30
 		strength = 8
 		dexterity = 14
 		constitution = 10

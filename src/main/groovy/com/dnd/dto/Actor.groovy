@@ -8,6 +8,7 @@ abstract class Actor
 	int currHp
 	int maxHp
 	int ac
+	int moveSpeed
 	int strength
 	int dexterity
 	int constitution

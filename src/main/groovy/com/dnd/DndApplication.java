@@ -34,14 +34,12 @@ public class DndApplication
 	{
 		System.out.println("hello world!");
 
-		PlayerCharacter playerCharacter = getStartingCharacter();
-		Monster goblin = new Goblin();
-
 		ArrayList<Actor> playerCharacters = new ArrayList<>();
-		playerCharacters.add(playerCharacter);
+		playerCharacters.add(getStartingCharacter());
 
 		ArrayList<Actor> monsters = new ArrayList<>();
-		monsters.add(goblin);
+		monsters.add(new Goblin("goblin1"));
+		monsters.add(new Goblin("goblin2"));
 
 		Game game = new Game(playerCharacters, monsters);
 

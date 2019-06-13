@@ -21,7 +21,8 @@ public class SetupCharacter
 				playerCharacter.setLevel(1);
 				playerCharacter.setCurrHp((playerCharacter.getPlayerClass().getHitDie()/2) + 1);
 				playerCharacter.setMaxHp((playerCharacter.getPlayerClass().getHitDie()/2) + 1);
-				playerCharacter.setAc(10);
+				playerCharacter.setAc(18);
+				playerCharacter.setMoveSpeed(30);
 				playerCharacter.setStrength(16);
 				playerCharacter.setDexterity(12);
 				playerCharacter.setConstitution(14);
