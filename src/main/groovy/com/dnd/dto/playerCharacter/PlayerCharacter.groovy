@@ -1,21 +1,18 @@
 package com.dnd.dto.playerCharacter
 
 import com.dnd.dto.Actor
+import com.dnd.dto.weapon.Weapon
 import com.dnd.enums.Action
 import com.dnd.enums.Race
 import com.dnd.util.AbilityHelper
 import com.dnd.util.Dice
 
-class PlayerCharacter extends Actor {
+class PlayerCharacter extends Actor
+{
 	PlayerClass playerClass
 	Race race
 	int level
-	int strength
-	int dexterity
-	int constitution
-	int intelligence
-	int wisdom
-	int charisma
+	Weapon currentWeapon
 
 	int rollForInitiative()
 	{
@@ -37,7 +34,6 @@ class PlayerCharacter extends Actor {
 
 		if (attackRole >= defender.getAc())
 		{
-			System.out.println(name + " hit " + defender.getName())
 			return true
 		}
 		else
@@ -49,9 +45,14 @@ class PlayerCharacter extends Actor {
 
 	boolean damage(Actor defender)
 	{
-		int damage = 2
-		System.out.println(name + " dealt " + damage + " to " + defender.getName() + "!")
-
+		int damage = 0
+		//weapon damage
+		for (int i = 0; i < currentWeapon.getDamage().length; i++)
+			damage += Dice.rollDice(currentWeapon.getDamage()[i])
+		//bonus damage
+		damage += AbilityHelper.abilityMod(strength)
+		defender.setCurrHp(defender.getCurrHp() - damage)
+		System.out.println(name + " hit " + defender.getName() + " for " + damage + " damage!")
 		return true
 	}
 }

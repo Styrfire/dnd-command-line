@@ -23,9 +23,9 @@ public class DndApplication
 							"Type in one of the above choices and press enter."
 			);
 
-			playerCharacter = SetupCharacter.setupClass(Input.readInput());
+			playerCharacter = SetupCharacter.setupClass("fighter");//Input.readInput());
 			if (playerCharacter == null)
-				System.out.println("Option unavailable...");
+				System.out.println("Option unavailable... Please try again.");
 			else
 				return playerCharacter;
 		}

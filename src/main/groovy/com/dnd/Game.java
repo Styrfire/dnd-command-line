@@ -20,6 +20,7 @@ class Game {
 
 	void rollForInitiative()
 	{
+		System.out.println("\nTime to roll for initiative!");
 		//add monsters to initiative
 		for (Actor actor : monsters)
 		{
@@ -74,10 +75,11 @@ class Game {
 
 	void combat()
 	{
+		System.out.println("\nLet the battle begin!");
 		int i = 0;
 		while (playerCharacterAlive() && initiativeOrder.size() > 1)
 		{
-			System.out.println("i = " + i);
+//			System.out.println("i = " + i);
 			System.out.println("It's " + initiativeOrder.get(i).getName() + "'s turn!");
 			switch (initiativeOrder.get(i).getAction())
 			{
@@ -91,7 +93,6 @@ class Game {
 							{
 								if (initiativeOrder.get(i).attack(defender))
 								{
-									defender.setCurrHp(defender.getCurrHp() - 5);
 									initiativeOrder.get(i).damage(defender);
 									if (defender.getCurrHp() <= 0)
 									{
@@ -114,7 +115,6 @@ class Game {
 							{
 								if (initiativeOrder.get(i).attack(defender))
 								{
-									defender.setCurrHp(defender.getCurrHp() - 5);
 									initiativeOrder.get(i).damage(defender);
 									if (defender.getCurrHp() <= 0)
 									{
@@ -135,13 +135,13 @@ class Game {
 			}
 
 			//end of round statistics!
-			System.out.println("END OF ROUND STATISTICS\n" +
-					"============================================");
+			System.out.println("\nEND OF ROUND STATISTICS\n");
 
 			for (int j = 0; j < initiativeOrder.size(); j++)
 			{
 				System.out.println(initiativeOrder.get(j).getName() + " has " + initiativeOrder.get(j).getCurrHp() + " hit points!");
 			}
+			System.out.println("============================================\n");
 
 			i += 1;
 			if (i >= initiativeOrder.size())
