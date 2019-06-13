@@ -1,40 +1,18 @@
-package com.dnd.dto.monster
+package com.dnd.dto.playerCharacter
 
 import com.dnd.dto.Actor
-import com.dnd.dto.weapon.Scimitar
 import com.dnd.dto.weapon.Weapon
 import com.dnd.enums.Action
+import com.dnd.enums.Race
 import com.dnd.util.AbilityHelper
 import com.dnd.util.Dice
 
-class Goblin extends Monster {
+class PlayerCharacter extends Actor
+{
+	PlayerClass playerClass
+	Race race
+	int level
 	Weapon currentWeapon
-
-	Goblin()
-	{
-		this("goblin")
-	}
-
-	Goblin(String name)
-	{
-		this(name, new Scimitar())
-	}
-
-	Goblin(String name, Weapon weapon)
-	{
-		this.name = name
-		currHp = 7
-		maxHp = 7
-		ac = 15
-		moveSpeed = 30
-		strength = 8
-		dexterity = 14
-		constitution = 10
-		intelligence = 10
-		wisdom = 8
-		charisma = 8
-		this.currentWeapon = weapon
-	}
 
 	int rollForInitiative()
 	{
@@ -51,13 +29,11 @@ class Goblin extends Monster {
 
 	boolean attack(Actor defender)
 	{
-		//attack role plus bonus to attack
-		int attackRole = Dice.rollDice(20) + 4
+		int attackRole = Dice.rollDice(20) + AbilityHelper.abilityMod(strength)
 		System.out.println(name + " rolled a " + attackRole + " to attack " + defender.getName() + "!")
 
 		if (attackRole >= defender.getAc())
 		{
-//			System.out.println(name + " hit " + defender.getName())
 			return true
 		}
 		else
@@ -73,8 +49,8 @@ class Goblin extends Monster {
 		//weapon damage
 		for (int i = 0; i < currentWeapon.getDamage().length; i++)
 			damage += Dice.rollDice(currentWeapon.getDamage()[i])
-		//goblin bonus damage
-		damage += 2
+		//bonus damage
+		damage += AbilityHelper.abilityMod(strength)
 		defender.setCurrHp(defender.getCurrHp() - damage)
 		System.out.println(name + " hit " + defender.getName() + " for " + damage + " damage!")
 		return true

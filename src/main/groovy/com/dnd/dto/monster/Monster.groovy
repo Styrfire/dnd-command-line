@@ -1,24 +1,12 @@
 package com.dnd.dto.monster
 
 import com.dnd.dto.Actor
-import com.dnd.util.AbilityHelper
-import com.dnd.util.Dice
+import com.dnd.enums.Action
 
-class Monster extends Actor {
-	String name
-	int ac
-	int strength
-	int dexterity
-	int constitution
-	int intelligence
-	int wisdom
-	int charisma
-
-	int getInitiative()
-	{
-		int initiative = Dice.rollDice(20) + AbilityHelper.abilityMod(dexterity)
-		System.out.println(name + "rolled a " + initiative + "for initiative!")
-
-		return initiative
-	}
+abstract class Monster extends Actor
+{
+	abstract int rollForInitiative();
+	abstract Action getAction();
+	abstract boolean attack(Actor defender);
+	abstract boolean damage(Actor defender);
 }

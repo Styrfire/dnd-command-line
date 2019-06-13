@@ -1,12 +1,14 @@
 package com.dnd.util;
 
-import com.dnd.dto.PlayerCharacter;
-import com.dnd.dto.playerClass.Fighter;
+import com.dnd.dto.playerCharacter.PlayerCharacter;
+import com.dnd.dto.playerCharacter.Fighter;
+import com.dnd.dto.weapon.Greatsword;
+import com.dnd.dto.weapon.Longsword;
 import com.dnd.enums.Race;
 
 public class SetupCharacter
 {
-	public static PlayerCharacter setupClass(String playerClass)
+	public static PlayerCharacter setupCharacterByClass(String playerClass)
 	{
 		PlayerCharacter playerCharacter = new PlayerCharacter();
 
@@ -19,13 +21,16 @@ public class SetupCharacter
 				playerCharacter.setLevel(1);
 				playerCharacter.setCurrHp((playerCharacter.getPlayerClass().getHitDie()/2) + 1);
 				playerCharacter.setMaxHp((playerCharacter.getPlayerClass().getHitDie()/2) + 1);
-				playerCharacter.setAc(0);
+				playerCharacter.setAc(18);
+				playerCharacter.setMoveSpeed(30);
 				playerCharacter.setStrength(16);
 				playerCharacter.setDexterity(12);
 				playerCharacter.setConstitution(14);
 				playerCharacter.setIntelligence(8);
 				playerCharacter.setWisdom(10);
 				playerCharacter.setCharisma(12);
+
+				playerCharacter.setCurrentWeapon(new Longsword());
 				System.out.println("You have chosen to be a fighter! You're name is: " + playerCharacter.getName());
 				break;
 			case "priest":
@@ -35,5 +40,10 @@ public class SetupCharacter
 		}
 
 		return playerCharacter;
+	}
+
+	public static PlayerCharacter setUpCharacter()
+	{
+		return null;
 	}
 }

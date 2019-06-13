@@ -1,10 +1,9 @@
 package com.dnd;
 
 import com.dnd.dto.Actor;
-import com.dnd.dto.PlayerCharacter;
+import com.dnd.dto.playerCharacter.PlayerCharacter;
 import com.dnd.dto.monster.Goblin;
 import com.dnd.dto.monster.Monster;
-import com.dnd.util.Input;
 import com.dnd.util.SetupCharacter;
 
 import java.util.ArrayList;
@@ -23,9 +22,9 @@ public class DndApplication
 							"Type in one of the above choices and press enter."
 			);
 
-			playerCharacter = SetupCharacter.setupClass(Input.readInput());
+			playerCharacter = SetupCharacter.setupCharacterByClass("fighter");//Input.readInput());
 			if (playerCharacter == null)
-				System.out.println("Option unavailable...");
+				System.out.println("Option unavailable... Please try again.");
 			else
 				return playerCharacter;
 		}
@@ -35,24 +34,18 @@ public class DndApplication
 	{
 		System.out.println("hello world!");
 
-		PlayerCharacter playerCharacter = getStartingCharacter();
-		Monster goblin = new Goblin();
-
 		ArrayList<Actor> playerCharacters = new ArrayList<>();
-		playerCharacters.add(playerCharacter);
+		playerCharacters.add(getStartingCharacter());
 
 		ArrayList<Actor> monsters = new ArrayList<>();
-		playerCharacters.add(goblin);
+		monsters.add(new Goblin("goblin1"));
+		monsters.add(new Goblin("goblin2"));
 
 		Game game = new Game(playerCharacters, monsters);
 
 		//combat
 		game.rollForInitiative();
-		while (game.playerCharacterAlive() && game.initiativeOrder.size() > 1)
-		{
-			int i = 0;
-		}
-
+		game.combat();
 
 	}
 }

@@ -1,6 +1,6 @@
-package com.dnd.dto.playerClass
+package com.dnd.dto.playerCharacter
 
-import com.dnd.dto.Actor
+
 import com.dnd.enums.Ability
 
 class PlayerClass {
