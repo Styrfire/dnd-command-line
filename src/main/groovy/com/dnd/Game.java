@@ -23,7 +23,7 @@ class Game {
 		//add monsters to initiative
 		for (Actor actor : monsters)
 		{
-			actor.setInitiative(actor.getInitiative());
+			actor.setInitiative(actor.rollForInitiative());
 			//insert actor at bottom of list
 			initiativeOrder.add(actor);
 
@@ -43,7 +43,7 @@ class Game {
 		//add playerCharacters to initiative
 		for (Actor actor : playerCharacters)
 		{
-			actor.setInitiative(actor.getInitiative());
+			actor.setInitiative(actor.rollForInitiative());
 			//insert actor at bottom of list
 			initiativeOrder.add(actor);
 
@@ -63,7 +63,7 @@ class Game {
 
 	private boolean playerCharacterAlive()
 	{
-		for (Actor playerCharacter: playerCharacters)
+		for (Actor playerCharacter: initiativeOrder)
 		{
 			if (playerCharacter.getCurrHp() > 0)
 				return true;
@@ -74,9 +74,11 @@ class Game {
 
 	void combat()
 	{
+		int i = 0;
 		while (playerCharacterAlive() && initiativeOrder.size() > 1)
 		{
-			int i = 0;
+			System.out.println("i = " + i);
+			System.out.println("It's " + initiativeOrder.get(i).getName() + "'s turn!");
 			switch (initiativeOrder.get(i).getAction())
 			{
 				case ATTACK:
@@ -89,6 +91,7 @@ class Game {
 							{
 								if (initiativeOrder.get(i).attack(defender))
 								{
+									defender.setCurrHp(defender.getCurrHp() - 5);
 									initiativeOrder.get(i).damage(defender);
 									if (defender.getCurrHp() <= 0)
 									{
@@ -140,8 +143,8 @@ class Game {
 				System.out.println(initiativeOrder.get(j).getName() + " has " + initiativeOrder.get(j).getCurrHp() + " hit points!");
 			}
 
-			i++;
-			if (i + 1 >= initiativeOrder.size())
+			i += 1;
+			if (i >= initiativeOrder.size())
 				i = 0;
 		}
 	}

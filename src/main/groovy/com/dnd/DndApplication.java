@@ -42,7 +42,7 @@ public class DndApplication
 		playerCharacters.add(playerCharacter);
 
 		ArrayList<Actor> monsters = new ArrayList<>();
-		playerCharacters.add(goblin);
+		monsters.add(goblin);
 
 		Game game = new Game(playerCharacters, monsters);
 

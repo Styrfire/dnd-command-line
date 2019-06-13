@@ -13,10 +13,10 @@ class Monster extends Actor {
 	int wisdom
 	int charisma
 
-	int getInitiative()
+	int rollForInitiative()
 	{
 		int initiative = Dice.rollDice(20) + AbilityHelper.abilityMod(dexterity)
-		System.out.println(name + "rolled a " + initiative + "for initiative!")
+		System.out.println(name + "rolled a " + initiative + " for initiative!")
 
 		return initiative
 	}
@@ -29,7 +29,7 @@ class Monster extends Actor {
 	boolean attack(Actor defender)
 	{
 		int attackRole = Dice.rollDice(20) + AbilityHelper.abilityMod(strength)
-		System.out.println(name + "rolled a " + attackRole + "to attack " + defender.getName() + "!")
+		System.out.println(name + " rolled a " + attackRole + " to attack " + defender.getName() + "!")
 
 		if (attackRole >= defender.getAc())
 		{
@@ -46,7 +46,7 @@ class Monster extends Actor {
 	boolean damage(Actor defender)
 	{
 		int damage = 2
-		System.out.println(name + "dealt " + damage + " to " + defender.getName() + "!")
+		System.out.println(name + " dealt " + damage + " to " + defender.getName() + "!")
 
 		return true
 	}

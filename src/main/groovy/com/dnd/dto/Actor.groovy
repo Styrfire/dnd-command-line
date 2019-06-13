@@ -10,7 +10,7 @@ abstract class Actor
 	int maxHp
 	int initiative
 
-	abstract int getInitiative();
+	abstract int rollForInitiative();
 	abstract Action getAction();
 	abstract boolean attack(Actor defender);
 	abstract boolean damage(Actor defender);
