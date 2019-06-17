@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 //https://rosettacode.org/wiki/A*_search_algorithm#Java
-class AStar {
+class AStar
+{
 	private final List<Node> open;
 	private final List<Node> closed;
 	private final List<Node> path;
@@ -14,15 +15,14 @@ class AStar {
 	private final int xstart;
 	private final int ystart;
 	private int xend, yend;
-	private final boolean diag;
 
 	// Node class for convienience
 	static class Node implements Comparable {
 		Node parent;
 		int x, y;
-		double g;
-		double h;
-		Node(Node parent, int xpos, int ypos, double g, double h) {
+		int g;
+		int h;
+		Node(Node parent, int xpos, int ypos, int g, int h) {
 			this.parent = parent;
 			this.x = xpos;
 			this.y = ypos;
@@ -45,7 +45,6 @@ class AStar {
 		this.now = new Node(null, xstart, ystart, 0, 0);
 		this.xstart = xstart;
 		this.ystart = ystart;
-		this.diag = diag;
 	}
 	/*
 	 ** Finds path to xend/yend or returns null
@@ -88,36 +87,28 @@ class AStar {
 	 **
 	 ** @return (int) distance
 	 */
-	private double distance(int dx, int dy) {
-		if (this.diag) { // if diagonal movement is alloweed
-			return Math.hypot(this.now.x + dx - this.xend, this.now.y + dy - this.yend); // return hypothenuse
-		} else {
-			return Math.abs(this.now.x + dx - this.xend) + Math.abs(this.now.y + dy - this.yend); // else return "Manhattan distance"
-		}
+	private int distance(int dx, int dy/*, boolean fiveFootStepUsed*/) {
+		if ((dx != 0) && (dy != 0))
+			return 10;
+		else
+			return 5;
 	}
 	private void addNeigborsToOpenList() {
 		Node node;
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1; y++) {
-				if (!this.diag && x != 0 && y != 0) {
-					continue; // skip if diagonal movement is not allowed
-				}
 				node = new Node(this.now, this.now.x + x, this.now.y + y, this.now.g, this.distance(x, y));
 				if ((x != 0 || y != 0) // not this.now
 						&& this.now.x + x >= 0 && this.now.x + x < this.maze[0].length // check maze boundaries
 						&& this.now.y + y >= 0 && this.now.y + y < this.maze.length
 						&& this.maze[this.now.y + y][this.now.x + x] != -1 // check if square is walkable
-						&& !findNeighborInList(this.open, node) && !findNeighborInList(this.closed, node)) { // if not already done
-					node.g = node.parent.g + 1.; // Horizontal/vertical cost = 1.0
+						&& !findNeighborInList(this.open, node) && !findNeighborInList(this.closed, node)) // if not already done
+				{
+					node.g = node.parent.g + 5; // Horizontal/vertical cost = 5
 					node.g += maze[this.now.y + y][this.now.x + x]; // add movement cost for this square
+					if (x != 0 && y != 0)
+						node.g += 5;	// Diagonal movement cost = 5
 
-					// diagonal cost = sqrt(hor_cost² + vert_cost²)
-					// in this example the cost would be 12.2 instead of 11
-                        /*
-                        if (diag && x != 0 && y != 0) {
-                            node.g += .4;	// Diagonal movement cost = 1.4
-                        }
-                        */
 					this.open.add(node);
 				}
 			}
@@ -145,7 +136,7 @@ class AStar {
 				System.out.print("[" + n.x + ", " + n.y + "] ");
 				maze[n.y][n.x] = -1;
 			});
-			System.out.printf("\nTotal cost: %.02f\n", path.get(path.size() - 1).g);
+			System.out.println("\nTotal cost: " + path.get(path.size() - 1).g);
 
 			for (int[] maze_row : maze) {
 				for (int maze_entry : maze_row) {
