@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 //https://rosettacode.org/wiki/A*_search_algorithm#Java
+//https://www.youtube.com/watch?v=pKnV6ViDpAI
 class AStar
 {
 	private final List<Node> open;
@@ -26,8 +27,8 @@ class AStar
 			this.parent = parent;
 			this.x = xpos;
 			this.y = ypos;
-			this.g = g;
-			this.h = h;
+			this.g = g; //cost to travel from start node to current node, regardless of obstruction
+			this.h = h; //cost to travel from current node to end node, regardless of obstruction
 		}
 		// Compare by f value (g + h)
 		@Override
@@ -87,7 +88,7 @@ class AStar
 	 **
 	 ** @return (int) distance
 	 */
-	private int distance(int dx, int dy/*, boolean fiveFootStepUsed*/) {
+	private int distance(int dx, int dy/*, boolean fiveFootDiagonalUsed*/) {
 		if ((dx != 0) && (dy != 0))
 			return 10;
 		else
@@ -106,8 +107,22 @@ class AStar
 				{
 					node.g = node.parent.g + 5; // Horizontal/vertical cost = 5
 					node.g += maze[this.now.y + y][this.now.x + x]; // add movement cost for this square
-					if (x != 0 && y != 0)
-						node.g += 5;	// Diagonal movement cost = 5
+					if (x != 0 && y != 0) // if diagonal
+					{
+						Node fiveFootStep = now;
+						while (fiveFootStep.parent != null)
+						{
+							// if the first 5 foot diagonal has already happened add the extra 5 feet for the diagonal
+							if (((fiveFootStep.x - fiveFootStep.parent.x) != 0) && ((fiveFootStep.y - fiveFootStep.parent.y) != 0))
+							{
+								node.g += 5; // Diagonal movement cost = 5
+								break;
+							}
+							fiveFootStep = fiveFootStep.parent;
+						}
+
+
+					}
 
 					this.open.add(node);
 				}
@@ -120,17 +135,19 @@ class AStar
 		// -1 = blocked
 		// 0+ = additional movement cost
 		int[][] maze = {
-				{  0,  0,  0,  0,  0,  0,  0,  0},
-				{  0,  0,  0,  0,  0,  0,  0,  0},
-				{  0,  0,  0,100,100,100,  0,  0},
-				{  0,  0,  0,  0,  0,100,  0,  0},
-				{  0,  0,100,  0,  0,100,  0,  0},
-				{  0,  0,100,  0,  0,100,  0,  0},
-				{  0,  0,100,100,100,100,  0,  0},
-				{  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,100,100,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,100,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 		};
-		AStar as = new AStar(maze, 0, 0, true);
-		List<Node> path = as.findPathTo(7, 7);
+		AStar as = new AStar(maze, 2, 7, true);
+		List<Node> path = as.findPathTo(7, 2);
 		if (path != null) {
 			path.forEach((n) -> {
 				System.out.print("[" + n.x + ", " + n.y + "] ");
