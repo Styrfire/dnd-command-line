@@ -62,12 +62,25 @@ class Game {
 		}
 	}
 
-	private boolean playerCharacterAlive()
+	private boolean aPlayerCharacterIsAlive()
 	{
-		for (Actor playerCharacter: initiativeOrder)
+		for (Actor actor: initiativeOrder)
 		{
-			if (playerCharacter.getCurrHp() > 0)
-				return true;
+			if (actor instanceof PlayerCharacter)
+				if (actor.getCurrHp() > 0)
+					return true;
+		}
+
+		return false;
+	}
+
+	private boolean aMonsterIsAlive()
+	{
+		for (Actor actor: initiativeOrder)
+		{
+			if (actor instanceof Monster)
+				if (actor.getCurrHp() > 0)
+					return true;
 		}
 
 		return false;
@@ -77,7 +90,7 @@ class Game {
 	{
 		System.out.println("\nLet the battle begin!");
 		int i = 0;
-		while (playerCharacterAlive() && initiativeOrder.size() > 1)
+		while (aPlayerCharacterIsAlive() && aMonsterIsAlive())
 		{
 //			System.out.println("i = " + i);
 			System.out.println("It's " + initiativeOrder.get(i).getName() + "'s turn!");
@@ -137,9 +150,9 @@ class Game {
 			//end of round statistics!
 			System.out.println("\nEND OF ROUND STATISTICS\n");
 
-			for (int j = 0; j < initiativeOrder.size(); j++)
+			for (Actor actor : initiativeOrder)
 			{
-				System.out.println(initiativeOrder.get(j).getName() + " has " + initiativeOrder.get(j).getCurrHp() + " hit points!");
+				System.out.println(actor.getName() + " has " + actor.getCurrHp() + " hit points!");
 			}
 			System.out.println("============================================\n");
 

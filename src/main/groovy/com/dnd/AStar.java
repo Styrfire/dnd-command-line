@@ -38,7 +38,7 @@ class AStar
 		}
 	}
 
-	private AStar(int[][] maze, int xstart, int ystart, boolean diag) {
+	private AStar(int[][] maze, int xstart, int ystart) {
 		this.open = new ArrayList<>();
 		this.closed = new ArrayList<>();
 		this.path = new ArrayList<>();
@@ -109,16 +109,16 @@ class AStar
 					node.g += maze[this.now.y + y][this.now.x + x]; // add movement cost for this square
 					if (x != 0 && y != 0) // if diagonal
 					{
-						Node fiveFootStep = now;
-						while (fiveFootStep.parent != null)
+						Node fiveFootDiagonal = now;
+						while (fiveFootDiagonal.parent != null)
 						{
 							// if the first 5 foot diagonal has already happened add the extra 5 feet for the diagonal
-							if (((fiveFootStep.x - fiveFootStep.parent.x) != 0) && ((fiveFootStep.y - fiveFootStep.parent.y) != 0))
+							if (((fiveFootDiagonal.x - fiveFootDiagonal.parent.x) != 0) && ((fiveFootDiagonal.y - fiveFootDiagonal.parent.y) != 0))
 							{
 								node.g += 5; // Diagonal movement cost = 5
 								break;
 							}
-							fiveFootStep = fiveFootStep.parent;
+							fiveFootDiagonal = fiveFootDiagonal.parent;
 						}
 
 
@@ -146,7 +146,7 @@ class AStar
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 		};
-		AStar as = new AStar(maze, 2, 7, true);
+		AStar as = new AStar(maze, 2, 7);
 		List<Node> path = as.findPathTo(7, 2);
 		if (path != null) {
 			path.forEach((n) -> {
