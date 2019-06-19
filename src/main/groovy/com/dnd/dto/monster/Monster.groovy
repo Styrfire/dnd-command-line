@@ -7,7 +7,7 @@ abstract class Monster extends Actor
 {
 	abstract int rollForInitiative();
 	abstract Action getAction();
-	abstract Action act(int[][] grid, List<Actor> actors);
+	abstract void act(int[][] grid, List<Actor> actors);
 	abstract boolean attack(Actor defender);
 	abstract boolean damage(Actor defender);
 }

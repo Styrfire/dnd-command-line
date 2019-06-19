@@ -1,9 +1,12 @@
 package com.dnd.dto.monster
 
+import com.dnd.AStar
 import com.dnd.dto.Actor
+import com.dnd.dto.playerCharacter.PlayerCharacter
 import com.dnd.dto.weapon.Scimitar
 import com.dnd.dto.weapon.Weapon
 import com.dnd.enums.Action
+import com.dnd.enums.WeaponType
 import com.dnd.util.AbilityHelper
 import com.dnd.util.Dice
 
@@ -49,12 +52,28 @@ class Goblin extends Monster {
 		return Action.ATTACK
 	}
 
-	Action act(int[][] grid, List<Actor> actors)
+	void act(int[][] grid, List<Actor> actors)
 	{
-		Actor enemy = closestEnemy(actors)
+		Actor enemy = findClosestEnemy(grid, actors)
 
-
-		return Action.ATTACK
+		if (enemyInRange(grid, enemy))
+		{
+			if (attack(enemy))
+				damage(enemy)
+		}
+		else
+		{
+			moveNextToEnemy(grid, enemy)
+			if (enemyInRange(grid, enemy))
+			{
+				if (attack(enemy))
+					damage(enemy)
+			}
+			else
+			{
+				System.out.println(name + " not in range of " + enemy.name + "!")
+			}
+		}
 	}
 
 	boolean attack(Actor defender)
@@ -86,5 +105,60 @@ class Goblin extends Monster {
 		defender.setCurrHp(defender.getCurrHp() - damage)
 		System.out.println(name + " hit " + defender.getName() + " for " + damage + " damage!")
 		return true
+	}
+
+	Actor findClosestEnemy(int[][] grid, List<Actor> actors)
+	{
+		Actor closestEnemy = null
+		for (Actor actor : actors)
+		{
+			if (actor instanceof PlayerCharacter) {
+				if (closestEnemy != null)
+				{
+					AStar aStar = new AStar(grid, x, y)
+					List<AStar.Node> path = aStar.findPathTo(closestEnemy.getX(), closestEnemy.getY())
+					List<AStar.Node> path1 = aStar.findPathTo(actor.getX(), actor.getY())
+
+					if ((path1.get(path.size() - 1).g) > (path.get(path.size() - 1).g))
+						closestEnemy = actor
+				}
+				else
+					closestEnemy = actor
+			}
+		}
+
+		System.out.println(getName() + " has aquired target " + closestEnemy.getName() + " at location [" + closestEnemy.getX() + ", " + closestEnemy.getY() + "]!")
+		return closestEnemy
+	}
+
+	boolean enemyInRange(int[][] grid, Actor enemy)
+	{
+		if (currentWeapon.type == WeaponType.MELEE)
+		{
+			AStar aStar = new AStar(grid, x, y)
+			List<AStar.Node> path = aStar.findPathTo(enemy.getX(), enemy.getY())
+			if (path.get(path.size() - 1).g <= 5)
+			{
+				System.out.println(name + " is in melee range of " + enemy.name + "!")
+				return true
+			}
+			else
+			{
+				System.out.println(name + " not in melee range of " + enemy.name + "!")
+				return false
+			}
+		}
+		return true
+	}
+
+	void moveNextToEnemy(int[][] grid, Actor enemy)
+	{
+		AStar aStar = new AStar(grid, x, y)
+		List<AStar.Node> path = aStar.findPathTo(enemy.getX(), enemy.getY())
+
+		x = path.get(path.size() - 2).x
+		y = path.get(path.size() - 2).y
+
+		System.out.println(name + " moved " + path.get(path.size() - 2).g + " feet from location [" + path.get(0).x + ", " + path.get(0).y + "] to location [" + x + ", " + y + "]!")
 	}
 }

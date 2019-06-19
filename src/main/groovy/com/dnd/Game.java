@@ -185,44 +185,17 @@ class Game {
 				case ATTACK:
 					if (initiativeOrder.get(i) instanceof Monster)
 					{
-						for (int i1 = 0; i1 < initiativeOrder.size(); i1++)
-						{
-							Actor defender = initiativeOrder.get(i1);
-							if (defender instanceof PlayerCharacter)
-							{
-								if (initiativeOrder.get(i).attack(defender))
-								{
-									initiativeOrder.get(i).damage(defender);
-									if (defender.getCurrHp() <= 0)
-									{
-										initiativeOrder.remove(i1);
-										if (i > i1)
-											i--;
-
-									}
-								}
-								break;
-							}
-						}
+						initiativeOrder.get(i).act(grid, initiativeOrder);
 					}
 					else
 					{
-						for (int i1 = 0; i1 < initiativeOrder.size(); i1++)
+						for (Actor defender : initiativeOrder)
 						{
-							Actor defender = initiativeOrder.get(i1);
 							if (defender instanceof Monster)
 							{
 								if (initiativeOrder.get(i).attack(defender))
-								{
 									initiativeOrder.get(i).damage(defender);
-									if (defender.getCurrHp() <= 0)
-									{
-										initiativeOrder.remove(i1);
-										if (i > i1)
-											i--;
 
-									}
-								}
 								break;
 							}
 						}
@@ -232,6 +205,19 @@ class Game {
 				default:
 					break;
 			}
+
+			//check if anyone has deid
+			for (int j = 0; j < initiativeOrder.size(); j++)
+			{
+				if (initiativeOrder.get(j).getCurrHp() <= 0)
+				{
+					initiativeOrder.remove(j);
+					if (i > j)
+						i--;
+				}
+			}
+
+			updateActorsOnGrid();
 
 			//end of round statistics!
 			System.out.println("\nEND OF ROUND STATISTICS\n");

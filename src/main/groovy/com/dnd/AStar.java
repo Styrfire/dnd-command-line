@@ -6,7 +6,7 @@ import java.util.List;
 
 //https://rosettacode.org/wiki/A*_search_algorithm#Java
 //https://www.youtube.com/watch?v=pKnV6ViDpAI
-class AStar
+public class AStar
 {
 	private final List<Node> open;
 	private final List<Node> closed;
@@ -18,11 +18,11 @@ class AStar
 	private int xend, yend;
 
 	// Node class for convienience
-	static class Node implements Comparable {
-		Node parent;
-		int x, y;
-		int g;
-		int h;
+	public static class Node implements Comparable {
+		public Node parent;
+		public int x, y;
+		public int g;
+		public int h;
 		Node(Node parent, int xpos, int ypos, int g, int h) {
 			this.parent = parent;
 			this.x = xpos;
@@ -38,7 +38,7 @@ class AStar
 		}
 	}
 
-	private AStar(int[][] maze, int xstart, int ystart) {
+	public AStar(int[][] maze, int xstart, int ystart) {
 		this.open = new ArrayList<>();
 		this.closed = new ArrayList<>();
 		this.path = new ArrayList<>();
@@ -54,7 +54,7 @@ class AStar
 	 ** @param (int) yend
 	 ** @return (List<Node> | null) the path
 	 */
-	private List<Node> findPathTo(int xend, int yend) {
+	public List<Node> findPathTo(int xend, int yend) {
 		this.xend = xend;
 		this.yend = yend;
 		this.closed.add(this.now);
