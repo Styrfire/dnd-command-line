@@ -49,8 +49,11 @@ class Goblin extends Monster {
 		return Action.ATTACK
 	}
 
-	Action getAction(int[][] grid, List<Actor> actors)
+	Action act(int[][] grid, List<Actor> actors)
 	{
+		Actor enemy = closestEnemy(actors)
+
+
 		return Action.ATTACK
 	}
 
