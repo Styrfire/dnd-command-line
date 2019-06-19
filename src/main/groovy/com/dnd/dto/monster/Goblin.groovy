@@ -49,6 +49,11 @@ class Goblin extends Monster {
 		return Action.ATTACK
 	}
 
+	Action getAction(int[][] grid, List<Actor> actors)
+	{
+		return Action.ATTACK
+	}
+
 	boolean attack(Actor defender)
 	{
 		//attack role plus bonus to attack

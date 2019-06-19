@@ -10,17 +10,100 @@ class Game {
 	private ArrayList<Actor> playerCharacters;
 	private ArrayList<Actor> monsters;
 	private ArrayList<Actor> initiativeOrder;
+	private int[][] grid;
 
 	Game(ArrayList<Actor> playerCharacters, ArrayList<Actor> monsters)
 	{
 		this.playerCharacters = playerCharacters;
 		this.monsters = monsters;
 		initiativeOrder = new ArrayList<>();
+		// -1 = blocked
+		// 0+ = additional movement cost
+		this.grid = new int[][] {
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+		};
+	}
+
+	private void updateActorsOnGrid()
+	{
+		grid = new int[][]{
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+		};
+
+		for (Actor actor : initiativeOrder)
+			grid[actor.getY()][actor.getX()] = 100;
+
+		System.out.println("Current grid (# are actors):");
+		for (int[] grid_row : grid) {
+			for (int grid_entry : grid_row) {
+				switch (grid_entry) {
+					case 0:
+						System.out.print("_");
+						break;
+					case -1:
+						System.out.print("*");
+						break;
+					default:
+						System.out.print("#");
+				}
+			}
+			System.out.println();
+		}
+	}
+
+	void marchingOrder()
+	{
+		System.out.println("\nEstablishing marching order!\n");
+		//set monsters position
+		int i = 0;
+		for (Actor actor : monsters)
+		{
+			if (((i*2) + 2) < 10)
+				actor.setX((i*2) + 2);
+
+			actor.setY(1);
+
+			System.out.println(actor.getName() + " is set at x = " + actor.getX() + " and y = " + actor.getY());
+			i++;
+		}
+
+		i = 0;
+		//set playerCharacters position
+		for (Actor actor : playerCharacters)
+		{
+			if (((i*2) + 3) < 10)
+				actor.setX((i*2) + 2);
+
+			actor.setY(8);
+
+			System.out.println(actor.getName() + " is set at x = " + actor.getX() + " and y = " + actor.getY());
+			i++;
+		}
+
+		System.out.println("============================================");
 	}
 
 	void rollForInitiative()
 	{
-		System.out.println("\nTime to roll for initiative!");
+		System.out.println("\nTime to roll for initiative!\n");
 		//add monsters to initiative
 		for (Actor actor : monsters)
 		{
@@ -60,6 +143,9 @@ class Game {
 					break;
 			}
 		}
+
+		updateActorsOnGrid();
+		System.out.println("============================================");
 	}
 
 	private boolean aPlayerCharacterIsAlive()
@@ -93,7 +179,7 @@ class Game {
 		while (aPlayerCharacterIsAlive() && aMonsterIsAlive())
 		{
 //			System.out.println("i = " + i);
-			System.out.println("It's " + initiativeOrder.get(i).getName() + "'s turn!");
+			System.out.println("\nIt's " + initiativeOrder.get(i).getName() + "'s turn!");
 			switch (initiativeOrder.get(i).getAction())
 			{
 				case ATTACK:
@@ -154,7 +240,7 @@ class Game {
 			{
 				System.out.println(actor.getName() + " has " + actor.getCurrHp() + " hit points!");
 			}
-			System.out.println("============================================\n");
+			System.out.println("============================================");
 
 			i += 1;
 			if (i >= initiativeOrder.size())

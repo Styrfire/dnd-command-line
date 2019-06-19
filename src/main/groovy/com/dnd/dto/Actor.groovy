@@ -17,9 +17,12 @@ abstract class Actor
 	int charisma
 
 	int initiative
+	int x
+	int y
 
 	abstract int rollForInitiative();
 	abstract Action getAction();
+	abstract Action getAction(int[][] grid, List<Actor> actors);
 	abstract boolean attack(Actor defender);
 	abstract boolean damage(Actor defender);
 	//abstract int move();

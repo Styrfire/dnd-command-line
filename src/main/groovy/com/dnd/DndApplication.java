@@ -44,6 +44,7 @@ public class DndApplication
 		Game game = new Game(playerCharacters, monsters);
 
 		//combat
+		game.marchingOrder();
 		game.rollForInitiative();
 		game.combat();
 
