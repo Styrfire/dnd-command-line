@@ -27,7 +27,7 @@ class PlayerCharacter extends Actor
 		return Action.ATTACK
 	}
 
-	void act(int[][] grid, List<Actor> actors)
+	void act(char[][] grid, List<Actor> actors)
 	{
 
 	}

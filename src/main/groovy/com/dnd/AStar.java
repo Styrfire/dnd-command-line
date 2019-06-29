@@ -11,7 +11,7 @@ public class AStar
 	private final List<Node> open;
 	private final List<Node> closed;
 	private final List<Node> path;
-	private final int[][] maze;
+	private final char[][] maze;
 	private Node now;
 	private final int xstart;
 	private final int ystart;
@@ -38,7 +38,7 @@ public class AStar
 		}
 	}
 
-	public AStar(int[][] maze, int xstart, int ystart) {
+	public AStar(char[][] maze, int xstart, int ystart) {
 		this.open = new ArrayList<>();
 		this.closed = new ArrayList<>();
 		this.path = new ArrayList<>();
@@ -102,11 +102,11 @@ public class AStar
 				if ((x != 0 || y != 0) // not this.now
 						&& this.now.x + x >= 0 && this.now.x + x < this.maze[0].length // check maze boundaries
 						&& this.now.y + y >= 0 && this.now.y + y < this.maze.length
-						&& this.maze[this.now.y + y][this.now.x + x] != -1 // check if square is walkable
+						&& this.maze[this.now.y + y][this.now.x + x] != '#' // check if square is walkable
 						&& !findNeighborInList(this.open, node) && !findNeighborInList(this.closed, node)) // if not already done
 				{
 					node.g = node.parent.g + 5; // Horizontal/vertical cost = 5
-					node.g += maze[this.now.y + y][this.now.x + x]; // add movement cost for this square
+//					node.g += maze[this.now.y + y][this.now.x + x]; // add movement cost for this square
 					if (x != 0 && y != 0) // if diagonal
 					{
 						Node fiveFootDiagonal = now;
@@ -120,8 +120,6 @@ public class AStar
 							}
 							fiveFootDiagonal = fiveFootDiagonal.parent;
 						}
-
-
 					}
 
 					this.open.add(node);
@@ -134,7 +132,8 @@ public class AStar
 	public static void main(String[] args) {
 		// -1 = blocked
 		// 0+ = additional movement cost
-		int[][] maze = {
+
+		char[][] maze = {
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,100,  0,  0,  0,  0,  0,  0},
@@ -146,22 +145,34 @@ public class AStar
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 		};
+/*		char[][] maze = {
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,100,100,100,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,100,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+		};*/
 		AStar as = new AStar(maze, 2, 7);
 		List<Node> path = as.findPathTo(7, 2);
 		if (path != null) {
 			path.forEach((n) -> {
 				System.out.print("[" + n.x + ", " + n.y + "] ");
-				maze[n.y][n.x] = -1;
+				maze[n.y][n.x] = '#';
 			});
 			System.out.println("\nTotal cost: " + path.get(path.size() - 1).g);
 
-			for (int[] maze_row : maze) {
-				for (int maze_entry : maze_row) {
+			for (char[] maze_row : maze) {
+				for (char maze_entry : maze_row) {
 					switch (maze_entry) {
 						case 0:
 							System.out.print("_");
 							break;
-						case -1:
+						case '#':
 							System.out.print("*");
 							break;
 						default:

@@ -30,6 +30,7 @@ class Goblin extends Monster {
 		maxHp = 7
 		ac = 15
 		moveSpeed = 30
+		letterId = 'g'
 		strength = 8
 		dexterity = 14
 		constitution = 10
@@ -52,7 +53,7 @@ class Goblin extends Monster {
 		return Action.ATTACK
 	}
 
-	void act(int[][] grid, List<Actor> actors)
+	void act(char[][] grid, List<Actor> actors)
 	{
 		Actor enemy = findClosestEnemy(grid, actors)
 
@@ -107,7 +108,7 @@ class Goblin extends Monster {
 		return true
 	}
 
-	Actor findClosestEnemy(int[][] grid, List<Actor> actors)
+	Actor findClosestEnemy(char[][] grid, List<Actor> actors)
 	{
 		Actor closestEnemy = null
 		for (Actor actor : actors)
@@ -131,7 +132,7 @@ class Goblin extends Monster {
 		return closestEnemy
 	}
 
-	boolean enemyInRange(int[][] grid, Actor enemy)
+	boolean enemyInRange(char[][] grid, Actor enemy)
 	{
 		if (currentWeapon.type == WeaponType.MELEE)
 		{
@@ -151,7 +152,7 @@ class Goblin extends Monster {
 		return true
 	}
 
-	void moveNextToEnemy(int[][] grid, Actor enemy)
+	void moveNextToEnemy(char[][] grid, Actor enemy)
 	{
 		AStar aStar = new AStar(grid, x, y)
 		List<AStar.Node> path = aStar.findPathTo(enemy.getX(), enemy.getY())

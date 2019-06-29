@@ -10,7 +10,7 @@ class Game {
 	private ArrayList<Actor> playerCharacters;
 	private ArrayList<Actor> monsters;
 	private ArrayList<Actor> initiativeOrder;
-	private int[][] grid;
+	private char[][] grid;
 
 	Game(ArrayList<Actor> playerCharacters, ArrayList<Actor> monsters)
 	{
@@ -19,7 +19,7 @@ class Game {
 		initiativeOrder = new ArrayList<>();
 		// -1 = blocked
 		// 0+ = additional movement cost
-		this.grid = new int[][] {
+		this.grid = new char[][] {
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -35,7 +35,7 @@ class Game {
 
 	private void updateActorsOnGrid()
 	{
-		grid = new int[][]{
+		grid = new char[][]{
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -49,20 +49,20 @@ class Game {
 		};
 
 		for (Actor actor : initiativeOrder)
-			grid[actor.getY()][actor.getX()] = 100;
+			grid[actor.getY()][actor.getX()] = actor.getLetterId();
 
 		System.out.println("Current grid (# are actors):");
-		for (int[] grid_row : grid) {
-			for (int grid_entry : grid_row) {
+		for (char[] grid_row : grid) {
+			for (char grid_entry : grid_row) {
 				switch (grid_entry) {
 					case 0:
 						System.out.print("_");
 						break;
-					case -1:
-						System.out.print("*");
+					case '#':
+						System.out.print("#");
 						break;
 					default:
-						System.out.print("#");
+						System.out.print(grid_entry);
 				}
 			}
 			System.out.println();
@@ -214,6 +214,7 @@ class Game {
 					initiativeOrder.remove(j);
 					if (i > j)
 						i--;
+					j--;
 				}
 			}
 
