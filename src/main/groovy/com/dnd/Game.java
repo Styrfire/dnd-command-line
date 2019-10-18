@@ -92,7 +92,7 @@ class Game {
 			if (((i*2) + 3) < 10)
 				actor.setX((i*2) + 2);
 
-			actor.setY(8);
+			actor.setY(9);
 
 			System.out.println(actor.getName() + " is set at x = " + actor.getX() + " and y = " + actor.getY());
 			i++;

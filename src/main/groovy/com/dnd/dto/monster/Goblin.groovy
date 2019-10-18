@@ -70,10 +70,6 @@ class Goblin extends Monster {
 				if (attack(enemy))
 					damage(enemy)
 			}
-			else
-			{
-				System.out.println(name + " not in range of " + enemy.name + "!")
-			}
 		}
 	}
 
@@ -157,9 +153,17 @@ class Goblin extends Monster {
 		AStar aStar = new AStar(grid, x, y)
 		List<AStar.Node> path = aStar.findPathTo(enemy.getX(), enemy.getY())
 
-		x = path.get(path.size() - 2).x
-		y = path.get(path.size() - 2).y
-
-		System.out.println(name + " moved " + path.get(path.size() - 2).g + " feet from location [" + path.get(0).x + ", " + path.get(0).y + "] to location [" + x + ", " + y + "]!")
+		// find closest spot to enemy that doesn't exceed moveSpeed
+		for (int i = 0; i < path.size() - 2; i++)
+		{
+			if (path.get(path.size() - 2 - i).g <= moveSpeed)
+			{
+				// set x and y to the patch right next to the target (not on top of)
+				x = path.get(path.size() - 2 - i).x
+				y = path.get(path.size() - 2 - i).y
+				System.out.println(name + " moved " + path.get(path.size() - 2 - i).g + " feet from location [" + path.get(0).x + ", " + path.get(0).y + "] to location [" + x + ", " + y + "]!")
+				break
+			}
+		}
 	}
 }
