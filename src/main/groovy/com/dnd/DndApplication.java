@@ -3,7 +3,6 @@ package com.dnd;
 import com.dnd.dto.Actor;
 import com.dnd.dto.playerCharacter.PlayerCharacter;
 import com.dnd.dto.monster.Goblin;
-import com.dnd.dto.monster.Monster;
 import com.dnd.util.SetupCharacter;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class DndApplication
 							"Type in one of the above choices and press enter."
 			);
 
-			playerCharacter = SetupCharacter.setupCharacterByClass("fighter");//Input.readInput());
+			playerCharacter = SetupCharacter.setupDefaultCharacterByClass("fighter");//Input.readInput());
 			if (playerCharacter == null)
 				System.out.println("Option unavailable... Please try again.");
 			else
@@ -35,7 +34,11 @@ public class DndApplication
 		System.out.println("hello world!");
 
 		ArrayList<Actor> playerCharacters = new ArrayList<>();
-		playerCharacters.add(getStartingCharacter());
+
+		if (System.getProperty("premade", "false").equals("true"))
+			playerCharacters.add(SetupCharacter.setupcharacter());
+		else
+			playerCharacters.add(getStartingCharacter());
 
 		ArrayList<Actor> monsters = new ArrayList<>();
 		monsters.add(new Goblin("goblin1"));
