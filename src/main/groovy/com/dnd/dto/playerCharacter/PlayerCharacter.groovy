@@ -27,6 +27,11 @@ class PlayerCharacter extends Actor
 		return Action.ATTACK
 	}
 
+	void act(char[][] grid, List<Actor> actors)
+	{
+
+	}
+
 	boolean attack(Actor defender)
 	{
 		int attackRole = Dice.rollDice(20) + AbilityHelper.abilityMod(strength)

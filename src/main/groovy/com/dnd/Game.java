@@ -10,17 +10,100 @@ class Game {
 	private ArrayList<Actor> playerCharacters;
 	private ArrayList<Actor> monsters;
 	private ArrayList<Actor> initiativeOrder;
+	private char[][] grid;
 
 	Game(ArrayList<Actor> playerCharacters, ArrayList<Actor> monsters)
 	{
 		this.playerCharacters = playerCharacters;
 		this.monsters = monsters;
 		initiativeOrder = new ArrayList<>();
+		// -1 = blocked
+		// 0+ = additional movement cost
+		this.grid = new char[][] {
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+		};
+	}
+
+	private void updateActorsOnGrid()
+	{
+		grid = new char[][]{
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+				{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+		};
+
+		for (Actor actor : initiativeOrder)
+			grid[actor.getY()][actor.getX()] = actor.getLetterId();
+
+		System.out.println("Current grid (# are actors):");
+		for (char[] grid_row : grid) {
+			for (char grid_entry : grid_row) {
+				switch (grid_entry) {
+					case 0:
+						System.out.print("_");
+						break;
+					case '#':
+						System.out.print("#");
+						break;
+					default:
+						System.out.print(grid_entry);
+				}
+			}
+			System.out.println();
+		}
+	}
+
+	void marchingOrder()
+	{
+		System.out.println("\nEstablishing marching order!\n");
+		//set monsters position
+		int i = 0;
+		for (Actor actor : monsters)
+		{
+			if (((i*2) + 2) < 10)
+				actor.setX((i*2) + 2);
+
+			actor.setY(1);
+
+			System.out.println(actor.getName() + " is set at x = " + actor.getX() + " and y = " + actor.getY());
+			i++;
+		}
+
+		i = 0;
+		//set playerCharacters position
+		for (Actor actor : playerCharacters)
+		{
+			if (((i*2) + 3) < 10)
+				actor.setX((i*2) + 2);
+
+			actor.setY(9);
+
+			System.out.println(actor.getName() + " is set at x = " + actor.getX() + " and y = " + actor.getY());
+			i++;
+		}
+
+		System.out.println("============================================");
 	}
 
 	void rollForInitiative()
 	{
-		System.out.println("\nTime to roll for initiative!");
+		System.out.println("\nTime to roll for initiative!\n");
 		//add monsters to initiative
 		for (Actor actor : monsters)
 		{
@@ -60,14 +143,30 @@ class Game {
 					break;
 			}
 		}
+
+		updateActorsOnGrid();
+		System.out.println("============================================");
 	}
 
-	private boolean playerCharacterAlive()
+	private boolean aPlayerCharacterIsAlive()
 	{
-		for (Actor playerCharacter: initiativeOrder)
+		for (Actor actor: initiativeOrder)
 		{
-			if (playerCharacter.getCurrHp() > 0)
-				return true;
+			if (actor instanceof PlayerCharacter)
+				if (actor.getCurrHp() > 0)
+					return true;
+		}
+
+		return false;
+	}
+
+	private boolean aMonsterIsAlive()
+	{
+		for (Actor actor: initiativeOrder)
+		{
+			if (actor instanceof Monster)
+				if (actor.getCurrHp() > 0)
+					return true;
 		}
 
 		return false;
@@ -77,53 +176,26 @@ class Game {
 	{
 		System.out.println("\nLet the battle begin!");
 		int i = 0;
-		while (playerCharacterAlive() && initiativeOrder.size() > 1)
+		while (aPlayerCharacterIsAlive() && aMonsterIsAlive())
 		{
 //			System.out.println("i = " + i);
-			System.out.println("It's " + initiativeOrder.get(i).getName() + "'s turn!");
+			System.out.println("\nIt's " + initiativeOrder.get(i).getName() + "'s turn!");
 			switch (initiativeOrder.get(i).getAction())
 			{
 				case ATTACK:
 					if (initiativeOrder.get(i) instanceof Monster)
 					{
-						for (int i1 = 0; i1 < initiativeOrder.size(); i1++)
-						{
-							Actor defender = initiativeOrder.get(i1);
-							if (defender instanceof PlayerCharacter)
-							{
-								if (initiativeOrder.get(i).attack(defender))
-								{
-									initiativeOrder.get(i).damage(defender);
-									if (defender.getCurrHp() <= 0)
-									{
-										initiativeOrder.remove(i1);
-										if (i > i1)
-											i--;
-
-									}
-								}
-								break;
-							}
-						}
+						initiativeOrder.get(i).act(grid, initiativeOrder);
 					}
 					else
 					{
-						for (int i1 = 0; i1 < initiativeOrder.size(); i1++)
+						for (Actor defender : initiativeOrder)
 						{
-							Actor defender = initiativeOrder.get(i1);
 							if (defender instanceof Monster)
 							{
 								if (initiativeOrder.get(i).attack(defender))
-								{
 									initiativeOrder.get(i).damage(defender);
-									if (defender.getCurrHp() <= 0)
-									{
-										initiativeOrder.remove(i1);
-										if (i > i1)
-											i--;
 
-									}
-								}
 								break;
 							}
 						}
@@ -134,14 +206,28 @@ class Game {
 					break;
 			}
 
+			//check if anyone has deid
+			for (int j = 0; j < initiativeOrder.size(); j++)
+			{
+				if (initiativeOrder.get(j).getCurrHp() <= 0)
+				{
+					initiativeOrder.remove(j);
+					if (i > j)
+						i--;
+					j--;
+				}
+			}
+
+			updateActorsOnGrid();
+
 			//end of round statistics!
 			System.out.println("\nEND OF ROUND STATISTICS\n");
 
-			for (int j = 0; j < initiativeOrder.size(); j++)
+			for (Actor actor : initiativeOrder)
 			{
-				System.out.println(initiativeOrder.get(j).getName() + " has " + initiativeOrder.get(j).getCurrHp() + " hit points!");
+				System.out.println(actor.getName() + " has " + actor.getCurrHp() + " hit points!");
 			}
-			System.out.println("============================================\n");
+			System.out.println("============================================");
 
 			i += 1;
 			if (i >= initiativeOrder.size())

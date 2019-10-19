@@ -9,6 +9,7 @@ abstract class Actor
 	int maxHp
 	int ac
 	int moveSpeed
+	char letterId
 	int strength
 	int dexterity
 	int constitution
@@ -17,9 +18,12 @@ abstract class Actor
 	int charisma
 
 	int initiative
+	int x
+	int y
 
 	abstract int rollForInitiative();
 	abstract Action getAction();
+	abstract void act(char[][] grid, List<Actor> actors);
 	abstract boolean attack(Actor defender);
 	abstract boolean damage(Actor defender);
 	//abstract int move();

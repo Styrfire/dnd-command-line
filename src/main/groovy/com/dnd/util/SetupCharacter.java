@@ -23,6 +23,7 @@ public class SetupCharacter
 				playerCharacter.setMaxHp((playerCharacter.getPlayerClass().getHitDie()/2) + 1);
 				playerCharacter.setAc(18);
 				playerCharacter.setMoveSpeed(30);
+				playerCharacter.setLetterId('P');
 				playerCharacter.setStrength(16);
 				playerCharacter.setDexterity(12);
 				playerCharacter.setConstitution(14);
