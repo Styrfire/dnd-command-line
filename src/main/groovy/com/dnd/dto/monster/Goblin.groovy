@@ -2,6 +2,9 @@ package com.dnd.dto.monster
 
 import com.dnd.AStar
 import com.dnd.dto.Actor
+import com.dnd.dto.combat.Attack
+import com.dnd.dto.combat.CombatActions
+import com.dnd.dto.combat.Move
 import com.dnd.dto.playerCharacter.PlayerCharacter
 import com.dnd.dto.weapon.Scimitar
 import com.dnd.dto.weapon.Weapon
@@ -15,7 +18,7 @@ class Goblin extends Monster {
 
 	Goblin()
 	{
-		this("goblin")
+		this("Goblin")
 	}
 
 	Goblin(String name)
@@ -38,60 +41,50 @@ class Goblin extends Monster {
 		wisdom = 8
 		charisma = 8
 		this.currentWeapon = weapon
+		combatActions = new CombatActions(1, 1, moveSpeed)
 	}
 
 	int rollForInitiative()
 	{
 		int initiative = Dice.rollDice(20) + AbilityHelper.abilityMod(dexterity)
-		System.out.println(name + "rolled a " + initiative + " for initiative!")
+		System.out.println(name + " rolled a " + initiative + " for initiative!")
 
 		return initiative
 	}
 
-	Action getAction()
+	Action determineAction(char[][] map, List<Actor> combatants)
 	{
-		return Action.ATTACK
-	}
+		Actor enemy = findClosestEnemy(map, combatants)
 
-	void act(char[][] grid, List<Actor> actors)
-	{
-		Actor enemy = findClosestEnemy(grid, actors)
-
-		if (enemyInRange(grid, enemy))
+		if (enemyInRange(map, enemy) && combatActions.getCurrActions() > 0)
 		{
-			if (attack(enemy))
-				damage(enemy)
+			System.out.println(name + " is going to attack!")
+			combatActions.setCurrMovement(0)
+			return Action.ATTACK
+		}
+		else if (combatActions.getCurrMovement() > 0)
+		{
+			System.out.println(name + " is going to move!")
+			return Action.MOVE
 		}
 		else
 		{
-			moveNextToEnemy(grid, enemy)
-			if (enemyInRange(grid, enemy))
-			{
-				if (attack(enemy))
-					damage(enemy)
-			}
+			System.out.println(name + " is ending their turn!")
+			return Action.END
 		}
 	}
 
-	boolean attack(Actor defender)
+	Attack attack(char[][] map, List<Actor> combatants)
 	{
 		//attack role plus bonus to attack
 		int attackRole = Dice.rollDice(20) + 4
-		System.out.println(name + " rolled a " + attackRole + " to attack " + defender.getName() + "!")
+		Actor enemy = findClosestEnemy(map, combatants)
+		System.out.println(name + " rolled a " + attackRole + " to attack " + enemy.getName() + "!")
 
-		if (attackRole >= defender.getAc())
-		{
-//			System.out.println(name + " hit " + defender.getName())
-			return true
-		}
-		else
-		{
-			System.out.println(name + " missed " + defender.getName())
-			return false
-		}
+		return new Attack(enemy.getName(), attackRole)
 	}
 
-	boolean damage(Actor defender)
+	int damage()
 	{
 		int damage = 0
 		//weapon damage
@@ -99,20 +92,43 @@ class Goblin extends Monster {
 			damage += Dice.rollDice(currentWeapon.getDamage()[i])
 		//goblin bonus damage
 		damage += 2
-		defender.setCurrHp(defender.getCurrHp() - damage)
-		System.out.println(name + " hit " + defender.getName() + " for " + damage + " damage!")
-		return true
+		System.out.println(name + " rolled a " + damage + "for damage!")
+		return damage
 	}
 
-	Actor findClosestEnemy(char[][] grid, List<Actor> actors)
+	Move move(char[][] map, List<Actor> combatants)
+	{
+		AStar aStar = new AStar(map, x, y)
+
+		Actor enemy = findClosestEnemy(map, combatants)
+		List<AStar.Node> path = aStar.findPathTo(enemy.getX(), enemy.getY())
+
+		// find closest spot to enemy that doesn't exceed moveSpeed
+		for (int i = 0; i < path.size() - 2; i++)
+		{
+			if (path.get(path.size() - 2 - i).g <= moveSpeed)
+			{
+				// set x and y to the patch right next to the target (not on top of)
+				x = path.get(path.size() - 2 - i).x
+				y = path.get(path.size() - 2 - i).y
+				combatActions.setCurrMovement(combatActions.getCurrMovement() - path.get(path.size() - 2 - i).g)
+				System.out.println(name + " moved " + path.get(path.size() - 2 - i).g + " feet from location [" + path.get(0).x + ", " + path.get(0).y + "] to location [" + x + ", " + y + "]!")
+				break
+			}
+		}
+
+		return new Move(x, y)
+	}
+
+	Actor findClosestEnemy(char[][] map, List<Actor> combatants)
 	{
 		Actor closestEnemy = null
-		for (Actor actor : actors)
+		for (Actor actor : combatants)
 		{
 			if (actor instanceof PlayerCharacter) {
 				if (closestEnemy != null)
 				{
-					AStar aStar = new AStar(grid, x, y)
+					AStar aStar = new AStar(map, x, y)
 					List<AStar.Node> path = aStar.findPathTo(closestEnemy.getX(), closestEnemy.getY())
 					List<AStar.Node> path1 = aStar.findPathTo(actor.getX(), actor.getY())
 

@@ -2,5 +2,6 @@ package com.dnd.enums
 
 enum Action {
 	ATTACK,
-	MOVE
+	MOVE,
+	END
 }

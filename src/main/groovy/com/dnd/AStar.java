@@ -89,10 +89,11 @@ public class AStar
 	 ** @return (int) distance
 	 */
 	private int distance(int dx, int dy/*, boolean fiveFootDiagonalUsed*/) {
-		if ((dx != 0) && (dy != 0))
-			return 10;
-		else
-			return 5;
+//		if ((dx != 0) && (dy != 0))
+//			return 10;
+//		else
+//			return 5;
+		return Math.abs(this.now.x + dx - this.xend)*5 + Math.abs(this.now.y + dy - this.yend)*5;
 	}
 	private void addNeigborsToOpenList() {
 		Node node;

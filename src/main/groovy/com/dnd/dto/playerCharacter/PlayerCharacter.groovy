@@ -1,6 +1,10 @@
 package com.dnd.dto.playerCharacter
 
+import com.dnd.AStar
 import com.dnd.dto.Actor
+import com.dnd.dto.combat.Attack
+import com.dnd.dto.combat.Move
+import com.dnd.dto.monster.Monster
 import com.dnd.dto.weapon.Weapon
 import com.dnd.enums.Action
 import com.dnd.enums.Race
@@ -17,38 +21,35 @@ class PlayerCharacter extends Actor
 	int rollForInitiative()
 	{
 		int initiative = Dice.rollDice(20) + AbilityHelper.abilityMod(dexterity)
-		System.out.println(name + "rolled a " + initiative + " for initiative!")
+		System.out.println(name + " rolled a " + initiative + " for initiative!")
 
 		return initiative
 	}
 
-	Action getAction()
+	Action determineAction(char[][] map, List<Actor> combatants)
 	{
 		return Action.ATTACK
 	}
 
-	void act(char[][] grid, List<Actor> actors)
+	Attack attack(char[][] map, List<Actor> combatants)
 	{
+		//attack role plus bonus to attack
+		int attackRole = Dice.rollDice(20) + 4
+		Actor enemy = null
+		for (Actor defender : combatants)
+		{
+			if (defender instanceof Monster)
+			{
+				enemy = defender
+				break
+			}
+		}
+		System.out.println(name + " rolled a " + attackRole + " to attack " + enemy.getName() + "!")
 
+		return new Attack(enemy.getName(), attackRole)
 	}
 
-	boolean attack(Actor defender)
-	{
-		int attackRole = Dice.rollDice(20) + AbilityHelper.abilityMod(strength)
-		System.out.println(name + " rolled a " + attackRole + " to attack " + defender.getName() + "!")
-
-		if (attackRole >= defender.getAc())
-		{
-			return true
-		}
-		else
-		{
-			System.out.println(name + " missed " + defender.getName())
-			return false
-		}
-	}
-
-	boolean damage(Actor defender)
+	int damage()
 	{
 		int damage = 0
 		//weapon damage
@@ -56,8 +57,13 @@ class PlayerCharacter extends Actor
 			damage += Dice.rollDice(currentWeapon.getDamage()[i])
 		//bonus damage
 		damage += AbilityHelper.abilityMod(strength)
-		defender.setCurrHp(defender.getCurrHp() - damage)
-		System.out.println(name + " hit " + defender.getName() + " for " + damage + " damage!")
-		return true
+		System.out.println(name + " rolled a " + damage + " for damage!")
+		return damage
 	}
+
+	Move move(char[][] map, List<Actor> combatants)
+	{
+		return new Move(x, y)
+	}
+
 }

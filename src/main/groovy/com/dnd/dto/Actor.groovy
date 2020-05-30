@@ -1,5 +1,7 @@
 package com.dnd.dto
 
+import com.dnd.dto.combat.Attack
+import com.dnd.dto.combat.Move
 import com.dnd.enums.Action
 
 abstract class Actor
@@ -22,9 +24,8 @@ abstract class Actor
 	int y
 
 	abstract int rollForInitiative();
-	abstract Action getAction();
-	abstract void act(char[][] grid, List<Actor> actors);
-	abstract boolean attack(Actor defender);
-	abstract boolean damage(Actor defender);
-	//abstract int move();
+	abstract Action determineAction(char[][] map, List<Actor> combatants);
+	abstract Attack attack(char[][] map, List<Actor> combatants);
+	abstract int damage();
+	abstract Move move(char[][] map, List<Actor> combatants);
 }
